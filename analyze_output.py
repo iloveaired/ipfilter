@@ -2,6 +2,8 @@ import os
 from collections import Counter
 
 
+
+
 def analyze_output():
     input_file = os.path.join(os.getcwd(), 'output.txt')
     stats_file = os.path.join(os.getcwd(), 'stats.txt')
