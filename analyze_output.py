@@ -1,5 +1,6 @@
 import os
 from collections import Counter
+import time
 
 
 
@@ -41,7 +42,7 @@ def analyze_output():
                     stats['bclass_count'] += 1
                     stats['bclass_networks'][network] += 1
         
-        # 통계 파일 작성
+        # 통계 일 작성
         with open(stats_file, 'w') as f:
             f.write("=== Analysis Results ===\n")
             f.write(f"Total lines analyzed: {stats['total_lines']:,}\n")
@@ -50,7 +51,7 @@ def analyze_output():
             f.write(f"B-class networks found: {stats['bclass_count']:,}\n\n")
             
             f.write("=== Top B-class Networks ===\n")
-            for network, count in stats['bclass_networks'].most_common(10):
+            for network, count in stats['bclass_networks'].most_common(200):
                 f.write(f"{network}: {count:,} occurrences\n")
             
             # 백분율 계산
@@ -66,6 +67,7 @@ def analyze_output():
         print(f"Error: {input_file} file not found")
     except Exception as e:
         print(f"Error occurred: {str(e)}")
+
 
 if __name__ == "__main__":
     analyze_output() 
