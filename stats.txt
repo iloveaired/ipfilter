@@ -1,0 +1,21 @@
+=== Analysis Results ===
+Total lines analyzed: 169,220
+Invalid format lines: 0
+NONE results: 125,441
+B-class networks found: 43,779
+
+=== Top B-class Networks ===
+161.142.0.0/16: 536 occurrences
+180.75.0.0/16: 433 occurrences
+157.100.0.0/16: 329 occurrences
+180.74.0.0/16: 310 occurrences
+148.178.0.0/16: 245 occurrences
+179.125.0.0/16: 215 occurrences
+175.223.0.0/16: 202 occurrences
+177.37.0.0/16: 187 occurrences
+136.227.0.0/16: 186 occurrences
+134.199.0.0/16: 180 occurrences
+
+=== Percentages ===
+NONE results: 74.13%
+B-class networks: 25.87%
