@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import time
 import hmac
 import hashlib
@@ -7,11 +8,17 @@ import json
 from urllib.parse import urlencode
 from datetime import datetime, timedelta
 
+# .env 파일 로드
+load_dotenv()
+
 class CoupangAPI:
-    def __init__(self, access_key, secret_key):
-        self.ACCESS_KEY = access_key
-        self.SECRET_KEY = secret_key
+    def __init__(self):
+        self.ACCESS_KEY = os.getenv('COUPANG_ACCESS_KEY')
+        self.SECRET_KEY = os.getenv('COUPANG_SECRET_KEY')
         self.DOMAIN = "https://api-gateway.coupang.com"
+        
+        if not self.ACCESS_KEY or not self.SECRET_KEY:
+            raise ValueError("Missing Coupang API keys in .env file")
     
     def generate_signature(self, url, method, timestamp):
         message = f"{method}\n{url}\n{timestamp}\n{self.ACCESS_KEY}"
@@ -74,44 +81,44 @@ class CoupangAPI:
         })
 
 def test_api():
-    # API 키 설정
-    ACCESS_KEY = "YOUR_ACCESS_KEY"
-    SECRET_KEY = "YOUR_SECRET_KEY"
-    
-    # API 인스턴스 생성
-    api = CoupangAPI(ACCESS_KEY, SECRET_KEY)
-    
-    # 테스트 1: 상품 검색
-    print("\n=== Test 1: Product Search ===")
-    products = api.search_products("노트북", limit=5)
-    if products:
-        print(json.dumps(products, indent=2, ensure_ascii=False))
-    
-    # 테스트 2: 딥링크 생성
-    print("\n=== Test 2: Deep Link Creation ===")
-    deep_link = api.create_deep_link("https://www.coupang.com/vp/products/7576857416")
-    if deep_link:
-        print(json.dumps(deep_link, indent=2, ensure_ascii=False))
-    
-    # 테스트 3: 클릭 통계
-    print("\n=== Test 3: Click Statistics ===")
-    today = datetime.now()
-    week_ago = today - timedelta(days=7)
-    clicks = api.get_click_stats(
-        week_ago.strftime("%Y-%m-%d"),
-        today.strftime("%Y-%m-%d")
-    )
-    if clicks:
-        print(json.dumps(clicks, indent=2, ensure_ascii=False))
-    
-    # 테스트 4: 주문 통계
-    print("\n=== Test 4: Order Statistics ===")
-    orders = api.get_order_stats(
-        week_ago.strftime("%Y-%m-%d"),
-        today.strftime("%Y-%m-%d")
-    )
-    if orders:
-        print(json.dumps(orders, indent=2, ensure_ascii=False))
+    try:
+        # API 인스턴스 생성
+        api = CoupangAPI()
+        
+        # 테스트 1: 상품 검색
+        print("\n=== Test 1: Product Search ===")
+        products = api.search_products("노트북", limit=5)
+        if products:
+            print(json.dumps(products, indent=2, ensure_ascii=False))
+        
+        # 테스트 2: 딥링크 생성
+        print("\n=== Test 2: Deep Link Creation ===")
+        deep_link = api.create_deep_link("https://www.coupang.com/vp/products/7576857416")
+        if deep_link:
+            print(json.dumps(deep_link, indent=2, ensure_ascii=False))
+        
+        # 테스트 3: 클릭 통계
+        print("\n=== Test 3: Click Statistics ===")
+        today = datetime.now()
+        week_ago = today - timedelta(days=7)
+        clicks = api.get_click_stats(
+            week_ago.strftime("%Y-%m-%d"),
+            today.strftime("%Y-%m-%d")
+        )
+        if clicks:
+            print(json.dumps(clicks, indent=2, ensure_ascii=False))
+        
+        # 테스트 4: 주문 통계
+        print("\n=== Test 4: Order Statistics ===")
+        orders = api.get_order_stats(
+            week_ago.strftime("%Y-%m-%d"),
+            today.strftime("%Y-%m-%d")
+        )
+        if orders:
+            print(json.dumps(orders, indent=2, ensure_ascii=False))
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
 
 if __name__ == "__main__":
     test_api() 
