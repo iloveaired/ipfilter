@@ -110,9 +110,11 @@ def test_api():
         
         # 테스트 4: 주문 통계
         print("\n=== Test 4: Order Statistics ===")
+        today = datetime.now()
+        week_ago = today - timedelta(days=7)
         orders = api.get_order_stats(
-            week_ago.strftime("%Y-%m-%d"),
-            today.strftime("%Y-%m-%d")
+            (today - timedelta(days=14)).strftime("%Y-%m-%d"),
+            (today - timedelta(days=7)).strftime("%Y-%m-%d")
         )
         if orders:
             print(json.dumps(orders, indent=2, ensure_ascii=False))
