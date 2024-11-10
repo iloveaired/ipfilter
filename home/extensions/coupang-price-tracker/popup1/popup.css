@@ -1,0 +1,33 @@
+body {
+  width: 400px;
+  padding: 15px;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.price-info {
+  background: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.price-info p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.chart-container {
+  height: 200px;
+  margin-top: 10px;
+}

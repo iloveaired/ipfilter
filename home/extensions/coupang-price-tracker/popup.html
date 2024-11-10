@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 15px;
+      font-family: Arial, sans-serif;
+    }
+    .price-info {
+      margin: 10px 0;
+      padding: 8px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+    }
+    .current-price {
+      color: #2962ff;
+      font-weight: bold;
+    }
+    .lowest-price {
+      color: #00c853;
+      font-weight: bold;
+    }
+    .history-title {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+    .price-history {
+      margin-top: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    .date {
+      color: #666;
+    }
+    .price {
+      font-weight: bold;
+    }
+    .price-decrease {
+      color: #00c853;
+    }
+    .price-increase {
+      color: #ff1744;
+    }
+    .status {
+      color: #666;
+      font-size: 0.8em;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .error {
+      color: #f44336;
+    }
+  </style>
+</head>
+<body>
+  <div class="price-info">
+    <div id="currentPrice" class="current-price">현재 가격: 연결 중...</div>
+  </div>
+  <div class="price-info">
+    <div id="lowestPrice" class="lowest-price">최저 가격: 연결 중...</div>
+  </div>
+  <div class="history-title">가격 변동 내역</div>
+  <div id="priceHistory" class="price-history">
+    연결 중...
+  </div>
+  <div id="status" class="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html> 

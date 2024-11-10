@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Coupang Price Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="../lib/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2 id="productName">상품명</h2>
+    <div class="price-info">
+      <p>현재 가격: <span id="currentPrice">로딩중...</span></p>
+      <p>최저 가격: <span id="minPrice">로딩중...</span></p>
+    </div>
+    <div class="chart-container">
+      <canvas id="priceChart"></canvas>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

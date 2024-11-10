@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            width: 400px; 
+            padding: 10px; 
+            font-family: Arial, sans-serif;
+        }
+        #productTitle {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+        .current-price { 
+            font-size: 18px; 
+            font-weight: bold;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        .price-chart { 
+            margin-top: 15px; 
+            height: 200px;
+        }
+        .price-history { 
+            margin-top: 15px;
+        }
+    </style>
+    <!-- Chart.js를 로컬에 다운로드하여 사용 -->
+</head>
+<body>
+    <div id="productTitle"></div>
+    <div class="current-price">
+        <span>현재가격: </span>
+        <span id="currentPrice">로딩중...</span>
+    </div>
+    
+    <div class="price-chart">
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <div class="price-history">
+        <h3>가격 히스토리</h3>
+        <div id="priceHistory"></div>
+    </div>
+</body>
+<!-- Chart.js를 로컬 파일로 먼저 로드 -->
+<script src="chart.js"></script>
+<script src="popup.js"></script>
+</html>
