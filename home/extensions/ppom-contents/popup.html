@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width: 500px;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            margin-bottom: 15px;
+        }
+        .stats {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .content-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .content-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content-info {
+            flex-grow: 1;
+        }
+        .delete-btn {
+            background: none;
+            color: #ff4444;
+            border: none;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        .delete-btn:hover {
+            opacity: 1;
+        }
+        .clear-all {
+            background: none;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            border-radius: 3px;
+            padding: 3px 8px;
+            cursor: pointer;
+            font-size: 11px;
+            float: right;
+            margin-bottom: 8px;
+        }
+        .clear-all:hover {
+            background: #fff0f0;
+        }
+        .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .url {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        .size {
+            color: #2196F3;
+            font-weight: bold;
+        }
+        .size small {
+            color: #666;
+            font-weight: normal;
+            font-size: 0.8em;
+        }
+        .current-url {
+            color: #4CAF50;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>PPOM Content Size</h2>
+        <div id="currentUrl" class="current-url"></div>
+    </div>
+    
+    <div class="stats">
+        <div>Source Size: <span id="currentSize" class="size">-</span></div>
+        <div>Domain: <span id="currentDomain">-</span></div>
+    </div>
+    
+    <button id="clearAll" class="clear-all">Clear All</button>
+    
+    <div class="content-list" id="contentList"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
