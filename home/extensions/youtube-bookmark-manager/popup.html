@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 10px;
+    }
+    .bookmark-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    .bookmark-content {
+      flex-grow: 1;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .bookmark-title {
+      margin-right: 5px;
+    }
+    .note-btn {
+      cursor: pointer;
+      color: #666;
+      font-size: 14px;
+      padding: 2px 5px;
+    }
+    .note-input {
+      display: none;
+      width: 150px;
+      font-size: 12px;
+      margin: 0 5px;
+    }
+    .note-text {
+      color: #666;
+      font-size: 12px;
+      font-style: italic;
+      margin-left: 5px;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .star-btn {
+      cursor: pointer;
+      font-size: 16px;
+      color: #ccc;
+    }
+    .star-btn.active {
+      color: #FFD700;
+    }
+    .delete-btn {
+      color: red;
+      cursor: pointer;
+    }
+    #add-bookmark {
+      margin-top: 10px;
+      padding: 5px;
+      width: 100%;
+    }
+    .filter-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .filter-btn {
+      padding: 5px 10px;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+    }
+    .filter-btn.active {
+      background: #FFD700;
+      border-color: #FFB700;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h3>YouTube 즐겨찾기</h3>
+  <div class="filter-container">
+    <button class="filter-btn active" data-filter="all">전체</button>
+    <button class="filter-btn" data-filter="starred">⭐ 즐겨찾기만</button>
+  </div>
+  <div id="bookmarks-list"></div>
+  <button id="add-bookmark">현재 페이지 추가</button>
+  <script src="popup.js"></script>
+</body>
+</html> 
