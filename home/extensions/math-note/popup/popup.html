@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            width: 800px;
+            height: 600px;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .toolbar {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .editor-container {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        #markdownEditor {
+            flex: 1;
+            min-height: 400px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+        }
+        #preview {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+        #preview img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <button id="captureWindow">창 선택 캡처</button>
+        </div>
+        <div class="editor-container">
+            <textarea id="markdownEditor" placeholder="마크다운을 입력하세요..."></textarea>
+            <div id="preview"></div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html> 
