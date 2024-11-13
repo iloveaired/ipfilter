@@ -312,48 +312,28 @@
   position: fixed;
   bottom: 20px;
   left: 50%;
-  transform: translateX(-50%) translateY(100%);
+  transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 8px 16px;
   border-radius: 4px;
   font-size: 14px;
   z-index: 1000;
-  opacity: 0;
-  transition: all 0.3s ease;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.toast-message.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
+.toast-message.fade-out {
+  animation: fadeOut 0.3s ease-in-out;
 }
 
-.toast-message.hide {
-  transform: translateX(-50%) translateY(-20px);
-  opacity: 0;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, 20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-.memo-content {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  width: 100%;
-}
-
-.copy-memo {
-  cursor: pointer;
-  padding: 2px 4px;
-  font-size: 1em;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-
-.copy-memo:hover {
-  opacity: 1;
-}
-
-.memo-item:hover .copy-memo {
-  opacity: 0.8;
+@keyframes fadeOut {
+  from { opacity: 1; transform: translate(-50%, 0); }
+  to { opacity: 0; transform: translate(-50%, -20px); }
 }
 
 .action-button {
@@ -476,44 +456,5 @@
 .db-controls button:hover {
   background-color: #f1f1f1;
   color: #1a73e8;
-}
-
-.star-memo {
-  cursor: pointer;
-  color: #ccc;
-  font-size: 1.2em;
-  transition: color 0.2s;
-  user-select: none;
-}
-
-.star-memo:hover {
-  color: #ffd700;
-}
-
-.star-memo.starred {
-  color: #ffd700;
-}
-
-.memo-controls {
-  margin-bottom: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.star-filter {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.star-filter input[type="checkbox"] {
-  margin: 0;
-}
-
-.star-filter span {
-  font-size: 0.9em;
-  color: #666;
 }
  

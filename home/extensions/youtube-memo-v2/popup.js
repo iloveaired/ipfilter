@@ -52,12 +52,6 @@ function setupEventListeners() {
       }
     }
   });
-
-  // 즐겨찾기 필터 이벤트
-  document.getElementById('filter-starred').addEventListener('change', (e) => {
-    const videoId = document.getElementById('memo-detail-view').dataset.videoId;
-    loadMemoDetail(videoId);
-  });
 }
 
 // 메모 목록 화면 로드
@@ -74,7 +68,7 @@ async function loadMemoList(forceList = false) {
     
     // 데이터가 없는 경우
     if (Object.keys(allData).length === 0) {
-      videoMemoList.innerHTML = '<div class="empty-state">장된 메모가 없습니다.</div>';
+      videoMemoList.innerHTML = '<div class="empty-state">저장된 메모가 없습니다.</div>';
       return;
     }
 
@@ -216,32 +210,28 @@ async function addMemo() {
 // 메모 상세 목록 로드 함수 수정
 async function loadMemoDetail(videoId) {
   try {
+    console.log('Loading memos for videoId:', videoId); // 디버깅용
     const memoList = document.getElementById('memo-list');
     const memos = await getMemos(videoId);
-    const filterStarred = document.getElementById('filter-starred').checked;
     
+    console.log('Retrieved memos:', memos); // 디버깅용
+
     if (!memos || !memos.length) {
       memoList.innerHTML = '<div class="empty-state">저장된 메모가 없습니다.</div>';
       return;
     }
 
     memoList.innerHTML = '';
-    const filteredMemos = filterStarred ? memos.filter(memo => memo.starred) : memos;
+    const sortedMemos = [...memos].sort((a, b) => a.timestamp - b.timestamp);
     
-    if (filteredMemos.length === 0) {
-      memoList.innerHTML = '<div class="empty-state">즐겨찾기된 메모가 없습니다.</div>';
-      return;
-    }
-
-    filteredMemos
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .forEach(memo => {
-        const memoElement = createMemoElement(memo, videoId);
-        memoList.appendChild(memoElement);
-      });
+    sortedMemos.forEach(memo => {
+      const memoElement = createMemoElement(memo, videoId);
+      memoList.appendChild(memoElement);
+    });
   } catch (error) {
     console.error('Error loading memo detail:', error);
-    memoList.innerHTML = '<div class="error-state">메모를 불러오는 중 오류가 발생했습니다.</div>';
+    document.getElementById('memo-list').innerHTML = 
+      '<div class="error-state">메모를 불러오는 중 오류가 발생했습니다.</div>';
   }
 }
 
@@ -321,7 +311,7 @@ async function exportMemos() {
     alert('메모를 성공적으로 내보냈습니다!');
   } catch (error) {
     console.error('Export error:', error);
-    alert('메모 내보내기 중 오류가 발생습니다.');
+    alert('메모 내보내기 중 오류가 발생했습니다.');
   }
 }
 
@@ -389,7 +379,7 @@ async function importMemos(event) {
           await chrome.storage.local.set(importedData.memos);
         }
 
-        alert('메모를 성공적으로 가져왔습니다!');
+        alert('메모를 공적으로 가져왔습니다!');
         loadMemoList();
       } catch (error) {
         console.error('Import error:', error);
@@ -434,7 +424,7 @@ async function getVideoInfo(tab) {
         });
       } else {
         resolve({
-          title: '제목 음',
+          title: '제목 없음',
           channel: '',
           url: tab.url
         });
@@ -515,68 +505,87 @@ function createMemoElement(memo, videoId) {
   
   const timestamp = formatTime(memo.timestamp);
   div.innerHTML = `
-    <div class="memo-content">
-      <span class="timestamp" title="클릭하여 이동">${timestamp}</span>
-      <span class="memo-text" contenteditable="true">${memo.text}</span>
-      <div class="memo-actions">
-        <span class="star-memo ${memo.starred ? 'starred' : ''}" title="즐겨찾기">★</span>
-        <span class="delete-memo" title="삭제">×</span>
-      </div>
-    </div>
+    <span class="timestamp" title="클릭하여 이동">${timestamp}</span>
+    <span class="memo-text" contenteditable="true">${memo.text}</span>
+    <span class="delete-memo" title="삭제">×</span>
   `;
 
   const memoText = div.querySelector('.memo-text');
-  const starButton = div.querySelector('.star-memo');
   let originalText = memo.text;
 
-  // 즐겨찾기 버튼 클릭 이벤트
-  starButton.addEventListener('click', async () => {
-    try {
-      const memos = await getMemos(videoId);
-      const updatedMemos = memos.map(m => {
-        if (m.id === memo.id) {
-          return { ...m, starred: !m.starred };
-        }
-        return m;
-      });
-      
-      await chrome.storage.local.set({ [videoId]: updatedMemos });
-      starButton.classList.toggle('starred');
-      showToast(starButton.classList.contains('starred') ? 
-        '즐겨찾기에 추가되었습니다.' : '즐겨찾기가 해제되었습니다.');
-    } catch (error) {
-      console.error('Error updating star:', error);
-      showToast('즐겨찾기 업데이트 중 오류가 발생했습니다.');
+  // 메모 수정 이벤트 - blur일 때 저장
+  memoText.addEventListener('blur', async () => {
+    const newText = memoText.textContent.trim();
+    if (newText && newText !== originalText) {
+      try {
+        const memos = await getMemos(videoId);
+        const updatedMemos = memos.map(m => {
+          if (m.id === memo.id) {
+            return { ...m, text: newText };
+          }
+          return m;
+        });
+
+        await chrome.storage.local.set({ [videoId]: updatedMemos });
+        originalText = newText;
+        showToast('메모가 수정었습니다.');
+      } catch (error) {
+        console.error('Error saving memo:', error);
+        memoText.textContent = originalText;
+        showToast('메모 저 중 오류가 발생했습니다.');
+      }
     }
   });
 
-  // 기존의 ��른 이벤트 리스너들...
+  // Enter 키 처리
+  memoText.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      memoText.blur();
+    }
+  });
+
+  // 기존 타임스탬프 클릭 이벤트
+  div.querySelector('.timestamp').addEventListener('click', async () => {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      chrome.tabs.sendMessage(tab.id, { 
+        action: "seekTo", 
+        time: memo.timestamp 
+      });
+    } catch (error) {
+      console.error('Error seeking to timestamp:', error);
+    }
+  });
+
+  // 삭제 버튼 이벤트
+  div.querySelector('.delete-memo').addEventListener('click', async () => {
+    if (confirm('이 메모를 삭제하시겠습니까?')) {
+      try {
+        const memos = await getMemos(videoId);
+        const updatedMemos = memos.filter(m => m.id !== memo.id);
+        await chrome.storage.local.set({ [videoId]: updatedMemos });
+        await loadMemoDetail(videoId);
+        showToast('메모가 삭제되었습니다.');
+      } catch (error) {
+        console.error('Error deleting memo:', error);
+        showToast('메모 삭제 중 오류가 발생했습니다.');
+      }
+    }
+  });
 
   return div;
 }
 
 // 토스트 메시지 표시 함수
 function showToast(message) {
-  // 기존 토스트 제거
-  const existingToast = document.querySelector('.toast-message');
-  if (existingToast) {
-    existingToast.remove();
-  }
-
   const toast = document.createElement('div');
   toast.className = 'toast-message';
   toast.textContent = message;
   document.body.appendChild(toast);
   
-  // 애니메이션 클래스 추가
   setTimeout(() => {
-    toast.classList.add('show');
-  }, 10);
-
-  // 토스트 메시지 제거
-  setTimeout(() => {
-    toast.classList.remove('show');
-    toast.classList.add('hide');
+    toast.classList.add('fade-out');
     setTimeout(() => toast.remove(), 300);
   }, 1700);
 } 
