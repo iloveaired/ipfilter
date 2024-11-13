@@ -117,6 +117,34 @@ function createLinkListUI() {
     return linkList;
 }
 
+// 하이라이트 스타일을 추가하는 함수
+function addHighlight(element) {
+    // 기존 스타일 백업
+    element.dataset.originalBackground = element.style.backgroundColor;
+    element.dataset.originalPosition = element.style.position;
+    element.dataset.originalZIndex = element.style.zIndex;
+
+    // 하이라이트 효과 적용
+    element.style.cssText += `
+        transition: all 0.2s ease;
+        background-color: #ff000033 !important;
+        position: relative;
+        z-index: 999999;
+        box-shadow: 0 0 0 2px #ff0000;
+        border-radius: 2px;
+    `;
+}
+
+// 하이라이트를 제거하는 함수
+function removeHighlight(element) {
+    // 원래 스타일로 복원
+    element.style.backgroundColor = element.dataset.originalBackground || '';
+    element.style.position = element.dataset.originalPosition || '';
+    element.style.zIndex = element.dataset.originalZIndex || '';
+    element.style.boxShadow = '';
+    element.style.borderRadius = '';
+}
+
 // 링크 처리 함수
 function processPpomppuUrls() {
     const links = document.querySelectorAll('a[href*="s.ppomppu.co.kr"]');
@@ -173,31 +201,28 @@ function processPpomppuUrls() {
                     </div>
                 `;
 
-                // 마우스 오버 이벤트
+                // 마우스 오버 이벤트 수정
                 item.addEventListener('mouseenter', () => {
-                    // 원본 링크 하이라이트
                     const originalLink = document.querySelector(`a[data-link-index="${index}"]`);
                     if (originalLink) {
-                        originalLink.style.transition = 'all 0.2s ease';
-                        originalLink.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
-                        originalLink.style.boxShadow = '0 0 0 2px rgba(255, 0, 0, 0.3)';
-                        originalLink.style.borderRadius = '2px';
+                        addHighlight(originalLink);
                         
                         // 화면에 보이지 않는 경우 스크롤
                         const rect = originalLink.getBoundingClientRect();
                         if (rect.top < 0 || rect.bottom > window.innerHeight) {
-                            originalLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            originalLink.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center'
+                            });
                         }
                     }
                 });
 
-                // 마우스 아웃 이벤트
+                // 마우스 아웃 이벤트 수정
                 item.addEventListener('mouseleave', () => {
-                    // 하이라이트 제거
                     const originalLink = document.querySelector(`a[data-link-index="${index}"]`);
                     if (originalLink) {
-                        originalLink.style.backgroundColor = '';
-                        originalLink.style.boxShadow = '';
+                        removeHighlight(originalLink);
                     }
                 });
 
