@@ -5,8 +5,8 @@
   "description": "YouTube 동영상 시청 중 타임스탬프와 함께 메모를 작성할 수 있는 확장 프로그램",
   "permissions": [
     "storage",
-    "activeTab",
-    "scripting"
+    "tabs",
+    "activeTab"
   ],
   "host_permissions": [
     "*://*.youtube.com/*"
@@ -17,8 +17,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["content.js"],
-      "run_at": "document_end"
+      "js": ["content.js"]
     }
   ]
 } 

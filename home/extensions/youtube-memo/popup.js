@@ -524,7 +524,7 @@ function createMemoElement(memo, videoId) {
   const timestamp = formatTime(memo.timestamp);
   div.innerHTML = `
     <div class="memo-content">
-      <span class="timestamp" title="클릭하여 이동">${timestamp}</span>
+      <span class="timestamp" title="클릭하여 이동" data-time="${memo.timestamp}">${timestamp}</span>
       <span class="memo-text" contenteditable="true">${memo.text}</span>
       <div class="memo-actions">
         <span class="star-memo ${memo.starred ? 'starred' : ''}" title="즐겨찾기">★</span>
@@ -533,7 +533,41 @@ function createMemoElement(memo, videoId) {
     </div>
   `;
 
-  const memoText = div.querySelector('.memo-text');
+  // 타임스탬프 클릭 이벤트
+  div.querySelector('.timestamp').addEventListener('click', async () => {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      
+      // 현재 탭이 해당 동영상이 아닌 경우
+      if (!tab.url.includes(videoId)) {
+        if (confirm('해당 동영상으로 이동하시겠습니까?')) {
+          await chrome.tabs.update(tab.id, { url: memo.videoInfo.url });
+          // 페이지 로드 완료 후 시간 이동
+          chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+            if (tabId === tab.id && info.status === 'complete') {
+              chrome.tabs.onUpdated.removeListener(listener);
+              setTimeout(() => {
+                chrome.tabs.sendMessage(tab.id, {
+                  action: "seekTo",
+                  time: memo.timestamp
+                });
+              }, 1000); // 플레이어 로드 대기
+            }
+          });
+        }
+      } else {
+        // 현재 탭이 해당 동영상인 경우
+        chrome.tabs.sendMessage(tab.id, {
+          action: "seekTo",
+          time: memo.timestamp
+        });
+      }
+    } catch (error) {
+      console.error('Error seeking to timestamp:', error);
+      showToast('동영상 시간 이동 중 오류가 발생했습니다.');
+    }
+  });
+
   const starButton = div.querySelector('.star-memo');
   let originalText = memo.text;
 
