@@ -222,6 +222,14 @@ async function loadMemoDetail(videoId) {
     
     if (!memos || !memos.length) {
       memoList.innerHTML = '<div class="empty-state">저장된 메모가 없습니다.</div>';
+      
+      // 메모가 없는 경우 목록 화면으로 자동 전환
+      const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const currentVideoId = new URL(currentTab.url).searchParams.get('v');
+      
+      if (videoId !== currentVideoId) {
+        showListView();
+      }
       return;
     }
 
@@ -550,7 +558,41 @@ function createMemoElement(memo, videoId) {
     }
   });
 
-  // 기존의 ��른 이벤트 리스너들...
+  // 삭제 버튼 이벤트
+  div.querySelector('.delete-memo').addEventListener('click', async () => {
+    if (confirm('이 메모를 삭제하시겠습니까?')) {
+      try {
+        const memos = await getMemos(videoId);
+        const updatedMemos = memos.filter(m => m.id !== memo.id);
+        
+        await chrome.storage.local.set({ [videoId]: updatedMemos });
+        
+        // 메모가 모두 삭제된 경우 해당 videoId 키 자체를 삭제
+        if (updatedMemos.length === 0) {
+          await chrome.storage.local.remove(videoId);
+        }
+
+        // 현재 필터 상태 확인
+        const filterStarred = document.getElementById('filter-starred').checked;
+        
+        // 메모 목록 새로고침
+        await loadMemoDetail(videoId);
+        
+        showToast('메모가 삭제되었습니다.');
+
+        // 모든 메모가 삭제되었고 목록 화면이 있다면 목록 새로고침
+        if (updatedMemos.length === 0) {
+          const listView = document.getElementById('memo-list-view');
+          if (listView.style.display !== 'none') {
+            await loadMemoList();
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting memo:', error);
+        showToast('메모 삭제 중 오류가 발생했습니다.');
+      }
+    }
+  });
 
   return div;
 }
