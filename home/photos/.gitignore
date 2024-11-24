@@ -1,0 +1,6 @@
+albums/
+*.jpg
+*.jpeg
+*.png
+*.gif
+favorites.json 
